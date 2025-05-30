@@ -16,7 +16,7 @@ const [darkMode, setDarkMode] = useContext(DarkModeContext);
   return (
     <div
       className={className}
-      style={{ ...style, display: "block",color:"black", background: "gray" }}
+      style={{ ...style, display: "block",color:"black", backgroundColor: "#0f3460",borderRadius:"15px" }}
       onClick={onClick}
     />
   );
@@ -29,7 +29,7 @@ const [darkMode, setDarkMode] = useContext(DarkModeContext);
   return (
     <div
       className={className}
-      style={{ ...style, display: "block",color:"black", background: "gray" }}
+      style={{ ...style, display: "block",color:"black", backgroundColor: "#0f3460",borderRadius:"15px"}}
       onClick={onClick}
     />
   );

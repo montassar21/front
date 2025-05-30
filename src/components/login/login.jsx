@@ -3,6 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { login, reset } from "../../app/features/authSlice.js";
+import Appbar from '../Appbar.jsx';
+
 import {
   Typography,
   Avatar,
@@ -97,15 +99,16 @@ export default function Authentification() {
 
   return (
     <ThemeProvider theme={theme}>
+      <Appbar />
       <Grid
         style={{
           color: darkMode ? "#000" : "#fff",
           backgroundColor: darkMode ? "#fff" : "#000",
-margin:'3%'
+          margin:'3%'
         }}
         container
         component="main"
-        sx={{ height: "100vh", width: "100%" }}
+        sx={{ height: "85vh", width: "100%" }}
       >
         <CssBaseline />
         {/* <Grid
@@ -130,18 +133,23 @@ margin:'3%'
             color: darkMode ? "#000" : "#fff",
             backgroundColor: darkMode ? "#fff" : "#000",
             margin: "0 auto",
+            marginTop:"50px"
+
           }}
           item
           xs={12}
           sm={8}
           md={5}
           component={Paper}
-          elevation={6}
+          elevation={5}
           square
         >
           <Box
+          style={{
+marginTop:'10%'
+          }}
             sx={{
-              my: 8,
+              my:4,
               mx: 4,
               display: "flex",
               flexDirection: "column",

@@ -118,6 +118,7 @@ export default function Appbar() {
   const mobileMenuId = "primary-search-account-menu-mobile";
   const renderMobileMenu = (
     <Menu
+    sx={{ display: { xs: "flex", sm: "none" } }}
       anchorEl={mobileMoreAnchorEl}
       anchorOrigin={{
         vertical: "top",
@@ -189,7 +190,7 @@ export default function Appbar() {
           </Link>
         </MenuItem>
       )}
-      {user && user.role === "admin" && (
+      {user && user?.user?.role === "admin" && (
         <MenuItem style={{ backgroundColor: darkMode ? "#0f3460" : "#fff" }}>
           <Link
             style={linkStyle}
@@ -238,7 +239,6 @@ export default function Appbar() {
       >
         {connectedUser ? (
           <Link
-            style={linkStyle}
             aria-label="Logout"
             className="navbar-link"
             to="/"
@@ -250,34 +250,39 @@ export default function Appbar() {
               color="inherit"
             >
               <LogoutIcon style={{ color: darkMode ? "#fff" : "#0f3460" }} />
-              <span
+          
+            </IconButton>
+                <span
                 style={{ color: darkMode ? "#fff" : "#0f3460" }}
                 className="nav-link-label"
               >
                 Logout
               </span>
-            </IconButton>
           </Link>
         ) : (
           <Link
-            style={linkStyle}
             aria-label="Login"
             to="/login"
-            className="login"
+            className="navbar-link"
           >
             <IconButton title="Login" size="large" color="inherit">
               <AccountCircle style={{ color: darkMode ? "#fff" : "#0f3460" }} />
-              <span
+        
+            </IconButton>
+                 <span
                 style={{ color: darkMode ? "#fff" : "#0f3460" }}
-                className="nav-link-label"
+                            className="nav-link-label"
+
               >
                 Login
               </span>
-            </IconButton>
           </Link>
         )}
       </MenuItem>
       <MenuItem style={{ backgroundColor: darkMode ? "#0f3460" : "#fff" }}>
+       <Link
+            className="navbar-link"
+          >
         <IconButton
           size="large"
           onClick={() => setDarkMode(!darkMode)}
@@ -286,31 +291,38 @@ export default function Appbar() {
           {darkMode ? (
             <i>
               <LuSun color="white" />
+            
+            </i>
+          ) : (
+            <i>
+              <IoMoon color="black" />
+          
+            </i>
+          )}
+        </IconButton>
+           {darkMode ? (
               <span
                 style={{ color: darkMode ? "#fff" : "#0f3460" }}
                 className="nav-link-label"
               >
                 Dark
               </span>
-            </i>
           ) : (
-            <i>
-              <IoMoon color="black" />
               <span
                 style={{ color: darkMode ? "#fff" : "#0f3460" }}
                 className="nav-link-label"
               >
                 Light
               </span>
-            </i>
           )}
-        </IconButton>
+        </Link>
       </MenuItem>
     </Menu>
   );
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+
+    <Box sx={{ flexGrow: 1  }}>
       <AppBar style={{ backgroundColor: darkMode ? "#0f3460" : "#fff" }}>
         <Toolbar>
            {/* Dashboard Logo with Link */}
@@ -330,13 +342,17 @@ export default function Appbar() {
             }}
           >
             
-            <img src={logoC} width={40}></img>
             {/* <strong style={{fontSize:'28px',color:'Highlight'}}>C</strong> */}
-            Commerce
+            Panyora
           </Typography>
 
           <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: "none", md: "flex" } }}>
+          <Box    sx={{
+    alignItems: 'center',
+    width: '30%',
+    gap: '5px',
+    display: { xs: "none", sm: "flex" } 
+  }}>
             <Link
               style={linkStyle}
               aria-label="Go to Shop Page"
@@ -386,7 +402,9 @@ export default function Appbar() {
                 </Badge>
               </IconButton>
             </Link>
-            <Link
+            {user && user?.user?.role === "admin" && (
+                <MenuItem style={{ backgroundColor: darkMode ? "#0f3460" : "#fff" }}>
+                  <Link
               title="Users list"
               style={linkStyle}
               aria-label="Go to Shop Page"
@@ -395,6 +413,7 @@ export default function Appbar() {
             >
               <IconButton
                 size="large"
+                edge="start"
                 aria-label="show 17 new notifications"
                 color="inherit"
               >
@@ -413,7 +432,8 @@ export default function Appbar() {
                   style={{ color: darkMode ? "#fff" : "#0f3460" }}
                 />
               </IconButton>
-            </Link>
+            </Link>         </MenuItem>
+)}
             {connectedUser ? (
               <Link
                 style={linkStyle}
@@ -425,7 +445,7 @@ export default function Appbar() {
                 <IconButton
                   title={`Connected As: ${connectedUser?.user?.name}`}
                   size="large"
-                  edge="end"
+                  edge="start"
                   aria-label="account of current user"
                   aria-controls={menuId}
                   aria-haspopup="true"
@@ -456,33 +476,35 @@ export default function Appbar() {
                 >
                   <AccountCircle
                     style={{
-                      color: darkMode ? "#fff" : "#0f3460",
-                      marginTop: "50%",
-                    }}
+                      color: darkMode ? "#fff" : "#0f3460"                    }}
                   />
                 </IconButton>
               </Link>
             )}
 
-            <IconButton
-              size="medium"
-              edge="end"
+<Link  title="Dark mode"
+                className="navbar-link"
+
+              style={linkStyle}
+             >
+ <IconButton
+ size="large"
               aria-label="account of current user"
               aria-controls={menuId}
+              edge="start"
               aria-haspopup="true"
               onClick={() => setDarkMode(!darkMode)}
               color="inherit"
             >
               {darkMode ? (
-                <i>
-                  <LuSun color="white" />
-                </i>
+                  <LuSun   style={{
+                      color: darkMode ? "#fff" : "#0f3460"                    }} />
               ) : (
-                <i>
-                  <IoMoon color="black" />
-                </i>
+                  <IoMoon   style={{
+                      color: darkMode ? "#fff" : "#0f3460"                    }} />
               )}
-            </IconButton>
+            </IconButton></Link>
+           
           </Box>
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
             <IconButton

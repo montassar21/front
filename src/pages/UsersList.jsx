@@ -1,15 +1,28 @@
 import React, { useEffect, useState } from "react";
 import authService from "../services/authService";
 import { styled } from "@mui/material/styles";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import { Box, Button, Chip, Container, Divider } from "@mui/material";
+import { tableCellClasses } from "@mui/material/TableCell"; 
+import {
+  Box,
+  Button,
+  Chip,
+  Container,
+  Divider,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper
+} from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import LockResetIcon from "@mui/icons-material/LockReset";
 import Appbar from "./../components/Appbar";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
@@ -29,7 +42,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {
     backgroundColor: theme.palette.action.hover,
   },
-  // hide last border
   "&:last-child td, &:last-child th": {
     border: 0,
   },
@@ -37,61 +49,82 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const UsersList = () => {
   const [users, setUsers] = useState([]);
-  const dispatch = useDispatch(); // Moved useDispatch inside functional component
-  const navigate = useNavigate(); // Navigate hook for redirection
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState(null);
+  const [newPassword, setNewPassword] = useState("");
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const data = JSON.parse(localStorage.getItem("user")); // Assuming this is the entire object with token and user properties
-    const user = data?.user; // Access the user object within the data
-    console.log("User from localStorage in UsersList:", user); // Debugging log
-    
-    // Ensure the user exists and the role is exactly 'admin'
+    const data = JSON.parse(localStorage.getItem("user"));
+    const user = data?.user;
+
     if (!user || user.role.trim() !== "admin") {
-      console.log("Not an admin or no user found, redirecting..."); // Debugging log
       navigate("/login");
     } else {
-      // Fetch the users list if the user is admin
-      authService.getAllUsers().then((res) => {
-        console.log("Users fetched in UsersList:", res); // Debugging log
-        if (res) {
-          setUsers(res);
-        }
-      }).catch((err) => {
-        console.error("Error fetching users:", err);
-      });
+      authService
+        .getAllUsers()
+        .then((res) => {
+          if (res) setUsers(res);
+        })
+        .catch((err) => {
+          console.error("Error fetching users:", err);
+        });
     }
   }, [navigate]);
-  
 
   const userDelete = (id) => {
-    authService.deleteUser(id)
+    authService
+      .deleteUser(id)
       .then(() => {
         toast.success("User has been deleted");
-        setUsers((prevUsers) => prevUsers.filter((user) => user._id !== id)); // ✅ Correct state update
+        setUsers((prevUsers) => prevUsers.filter((user) => user._id !== id));
       })
       .catch((err) => {
         console.error("Error deleting user:", err);
         toast.error("Failed to delete user");
       });
   };
-  
+
+  const handleResetClick = (id) => {
+    setSelectedUserId(id);
+    setOpenDialog(true);
+  };
+
+  const handleResetSubmit = () => {
+    if (!newPassword || newPassword.length < 6) {
+      toast.error("Le mot de passe doit contenir au moins 6 caractères");
+      return;
+    }
+
+    authService
+      .resetPassword(selectedUserId, newPassword)
+      .then(() => {
+        toast.success("Mot de passe réinitialisé avec succès");
+        setOpenDialog(false);
+        setNewPassword("");
+        setSelectedUserId(null);
+      })
+      .catch((err) => {
+        console.error("Erreur de réinitialisation:", err);
+        toast.error("Échec de la réinitialisation du mot de passe");
+      });
+  };
 
   return (
     <>
       <Appbar />
-      <Container sx={{ marginTop: "20%", marginBottom: "20%" }} maxWidth="xl">
+      <Container sx={{ marginTop: "10%", marginBottom: "10%" }} maxWidth="xl">
         <Box>
           <TableContainer component={Paper}>
-            <Table
-              sx={{ minWidth: 700, marginBottom: "20%" }}
-              aria-label="customized table"
-            >
+            <Table sx={{ minWidth: 700 }} aria-label="customized table">
               <TableHead>
                 <TableRow>
                   <StyledTableCell>Nom et prénom</StyledTableCell>
                   <StyledTableCell align="right">Email</StyledTableCell>
                   <StyledTableCell align="right">Role</StyledTableCell>
-                  <StyledTableCell align="right">Action</StyledTableCell>
+                  <StyledTableCell align="right">Actions</StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -103,10 +136,22 @@ const UsersList = () => {
                     <StyledTableCell align="right">{u.email}</StyledTableCell>
                     <StyledTableCell align="right">{u.role}</StyledTableCell>
                     <StyledTableCell align="right">
-                    <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => userDelete(u._id)}>
-                       Delete
-                    </Button>
-
+                      <Button
+                        variant="outlined"
+                        color="error"
+                        startIcon={<DeleteIcon />}
+                        onClick={() => userDelete(u._id)}
+                        sx={{ mr: 1 }}
+                      >
+                        Supprimer
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        startIcon={<LockResetIcon />}
+                        onClick={() => handleResetClick(u._id)}
+                      >
+                        Réinitialiser le mot de passe
+                      </Button>
                     </StyledTableCell>
                   </StyledTableRow>
                 ))}
@@ -116,8 +161,30 @@ const UsersList = () => {
         </Box>
       </Container>
       <Divider>
-        <Chip label="Users list" size="small" />
+        <Chip label="Liste des utilisateurs" size="small" />
       </Divider>
+
+      {/* Formulaire de réinitialisation de mot de passe */}
+      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+        <DialogTitle>Réinitialiser le mot de passe</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Nouveau mot de passe"
+            type="password"
+            fullWidth
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenDialog(false)}>Annuler</Button>
+          <Button onClick={handleResetSubmit} variant="contained" color="primary">
+            Réinitialiser
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

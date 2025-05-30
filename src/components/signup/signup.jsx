@@ -17,6 +17,7 @@ import {
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { DarkModeContext } from "../../contexte/index.jsx";
+import Appbar from '../Appbar.jsx';
 
 function Copyright(props) {
   return (
@@ -99,6 +100,7 @@ export default function Signup() {
 
   return (
     <ThemeProvider theme={theme}>
+            <Appbar />
       <Grid
         style={{
           color: darkMode ? "#000" : "#fff",
@@ -107,7 +109,7 @@ export default function Signup() {
         }}
         container
         component="main"
-        sx={{ height: "100vh" }}
+        sx={{ height: "118vh" }}
       >
         <CssBaseline />
         {/* <Grid
@@ -132,9 +134,10 @@ export default function Signup() {
             color: darkMode ? "#000" : "#fff",
             backgroundColor: darkMode ? "#fff" : "#000",
             margin: "0 auto",
+            marginTop:"50px"
           }}
           item
-          xs={12}
+          xs={10}
           sm={8}
           md={5}
           component={Paper}
@@ -143,12 +146,11 @@ export default function Signup() {
         >
           <Box
             sx={{
-              my: 8,
+              my: 7,
               mx: 4,
               display: "flex",
               flexDirection: "column",
-              alignItems: "center",
-            }}
+              alignItems: "center"            }}
           >
             <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
               <LockOutlinedIcon />

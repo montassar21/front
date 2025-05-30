@@ -13,9 +13,9 @@ const Footer = () => {
             <Col md={3} sm={5} className='box'>
               <div className="logo">
                   <ion-icon name="bag"></ion-icon>
-                  <h1>WA Commerce</h1>
+                  <h1>Panyora</h1>
               </div>
-              <p>Wa commerce Company : Shopping online</p>
+              <p>Panyora Company : Shopping online</p>
             </Col>
             <Col md={3} sm={5} className='box'>
               <h2>Links</h2>
@@ -39,7 +39,7 @@ const Footer = () => {
               <h2>Contact Us</h2>
               <ul>
                 <li>Tunis, Tunisie</li>
-                <li>Email: aymenbourogaa5@gmail.com</li>
+                <li>Email: @gmail.com</li>
                 <li>Phone: +216 95970265</li>
               </ul>
             </Col>
@@ -53,7 +53,7 @@ const Footer = () => {
   sx={{ marginTop: '10vh' }}
 >
 <Divider >
-&copy; <span>{`${new Date().getFullYear()} Wa-commerce, `}</span>All rights reserved.
+&copy; <span>{`${new Date().getFullYear()} Panyora, `}</span>All rights reserved.
   
 </Divider>
           </Grid>

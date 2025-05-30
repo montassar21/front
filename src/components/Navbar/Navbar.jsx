@@ -52,7 +52,7 @@ const NavBar = () => {
             style={{ textDecoration: "none", color: darkMode ? "#000" : "#fff" }}
           >
             <h1 className="logo" style={{ color: darkMode ? "#000" : "#fff" }}>
-              WA Commerce
+              Panyora
             </h1>
           </Link>
         </Navbar.Brand>

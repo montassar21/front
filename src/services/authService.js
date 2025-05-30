@@ -1,10 +1,11 @@
 import axios from 'axios'
 
-//const API_URL = 'http://backend-e-commerce-9fdb.onrender.com'
+// const API_URL = 'http://backend-e-commerce-9fdb.onrender.com'
 const API_URL = 'http://localhost:4000'
 
 // Register user
 const register = async (userData) => {
+  console.log(userData)
   const response = await axios.post(API_URL +'/signup', userData)
 
   if (response.data) {
@@ -13,6 +14,12 @@ const register = async (userData) => {
 
   return response.data
 }
+
+const resetPassword = (userId, newPassword) => {
+  return axios.post(`${API_URL}/auth/reset-password/${userId}`, {
+    password: newPassword,
+  });
+};
 
 // Login user
 const login = async (userData) => {
@@ -54,7 +61,7 @@ const authService = {
   login,
   getCurrentUser,
   getAllUsers,
-  deleteUser 
+  deleteUser,resetPassword
 }
 
 export default authService
